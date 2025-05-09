@@ -1,0 +1,37 @@
+hub:
+  config:
+    JupyterHub:
+      # Tell Tornado to trust the X-Forwarded-* headers
+      tornado_settings:
+        xheaders: true
+      # (optional) trust localhost so X-Forwarded-For parsing is correct
+      trusted_downstream_ips:
+        - 127.0.0.1
+
+#proxy:
+#  service:
+#    loadBalancerIP: 10.109.130.74
+
+#proxy:
+#  https:
+#    enabled: true
+#    hosts:
+#      - https://mc-a4.lab.uvalight.net
+#    letsencrypt:
+#      contactEmail: goncalo.ferreira@student.uva.nl
+
+proxy:
+  https:
+    enabled: true
+    type: offload
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - mc-a4.lab.uvalight.net
+    tls:
+      - hosts:
+          - mc-a4.lab.uvalight.net
+        secretName: jupyterhub-tls

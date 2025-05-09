@@ -1,0 +1,148 @@
+proxy:
+  https:
+    enabled: false
+  # hosts:
+  #   - mc-a4.lab.uvalight.net
+  # pathSuffix: /jupyter(/|$)(.*)
+  # pathType: ImplementationSpecific 
+
+hub:
+  config:
+    Spawner:
+      post_stop_hook: |
+        def post_stop_hook(spawner):
+            import subprocess, os
+            # Namespace is usually spawner.namespace
+            ns = spawner.namespace
+            outdir = "/mnt/data"
+            # Call your exporter binary/script that's in the Hub container
+            subprocess.Popen([
+                "python3",
+                "/usr/local/bin/export_scaphandre_metrics.py",
+                "--namespace", ns,
+                "--output-dir", outdir
+            ])
+    JupyterHub:
+      baseUrl: "/jupyter"
+      tornado_settings:
+        xheaders: true
+    JupyterHubCuller:
+      enabled: true
+      timeout: 3600 # 1 hour
+      every: 6000 # 10 minutes
+      concurrency: 10
+    Authenticator:
+      admin_users:
+        - shashikant
+        - yuri
+        - adnan
+        - quint
+        - goncalo
+    DummyAuthenticator:
+      password: greendigit2025
+    JupyterHub:
+      authenticator_class: dummy
+
+singleuser:
+  image:
+    name: jupyter/datascience-notebook
+    tag: latest
+
+  storage:
+    extraVolumes:
+      - name: export-script
+        configMap:
+          name: export-metrics-script
+      - name: powercap
+        hostPath:
+          path: /sys/class/powercap
+          type: Directory
+      - name: proc
+        hostPath:
+          path: /proc
+          type: Directory
+      - name: containerd-sock
+        hostPath:
+          path: /run/containerd/containerd.sock
+          type: Socket
+      - name: nginx-config
+        configMap:
+          name: scaphandre-nginx-config
+
+    extraVolumeMounts:
+      - name: export-script
+        mountPath: /usr/local/bin/export_metrics.py
+        subPath: export_metrics.py
+        readOnly: true
+      - name: powercap
+        mountPath: /sys/class/powercap
+      - name: proc
+        mountPath: /proc
+      - name: containerd-sock
+        mountPath: /run/containerd/containerd.sock
+        readOnly: true
+
+  extraContainers:
+    - name: scaphandre
+      image: hubblo/scaphandre:latest
+      args:
+        - prometheus
+        - "--address=0.0.0.0"
+        - "--port=8080"
+        - "--containers"
+      ports:
+        - name: rawmetrics
+          containerPort: 8080
+# Temporary fix
+    - name: proxy-metrics
+      image: nginx:stable-alpine
+      volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+      # image: alpine:latest
+      # command: ["/bin/sh", "-c"]
+      # args:
+      #   - |
+      #     apk add --no-cache socat netcat-openbsd && \
+      #     socat TCP-LISTEN:8081,fork,reuseaddr SYSTEM:"(echo -ne 'HTTP/1.1 200 OK\r\nContent-Type: text/plain; version=0.0.4\r\n\r\n'; cat) < /dev/stdin | nc 127.0.0.1 8080"
+      ports:
+        - name: metrics
+          containerPort: 8081
+
+
+# ==========================
+# Temporary notes for ingress and proxy redirection
+# ==========================
+
+# proxy:
+#   secretToken: "9f303dfa31f2dd55356b28ca77b0823436011c7ca1c5e93e3c8ee637d0d1d650"
+#   service:
+    # type: LoadBalancer # It exposes the 8000 port automatically, mapped to the 80 port.
+    # type: NodePort
+    # nodePorts:
+    #   http: 30080
+# ingress:
+#   enabled: true
+#   annotations:
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+#   hosts:
+#     - host: mc-a4.lab.uvalight.net
+#       paths:
+#         - /jupyter(/|$)(.*)
+# metadata:
+#   name: jupyterhub-ingress
+#   namespace: jhub
+#   annotations:
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+# spec:
+#   rules:
+#   - host: mc-a4.lab.uvalight.net
+#     http:
+#       paths:
+#       - path: /jupyter(/|$)(.*)
+#         pathType: ImplementationSpecific
+#         backend:
+#           service:
+#             name: proxy-public
+#             port:
+#               number: 80

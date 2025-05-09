@@ -1,0 +1,36 @@
+proxy:
+  secretToken: "432dff50d8ccd14eb0e7d5deb95c45e85e519931ceb20adfaa8bfec8cd70bf95"
+#  https:
+#    enabled: false
+
+hub:
+  config:
+    JupyterHub:
+      authenticator_class: dummy
+    DummyAuthenticator:
+      user_password:
+        alice: letmein  # or however you want your dummy credentials
+
+singleuser:
+  image:
+    name: jupyter/datascience-notebook
+    tag: latest
+  extraPodConfig:
+    volumes:
+      - name: powercap
+        hostPath:
+          path: /sys/class/powercap
+          type: Directory
+  extraContainers:
+    - name: scaphandre
+      image: hubblo/scaphandre:latest
+      args:
+        - prometheus
+        - "--cgroup"
+        - "$(awk -F: '/cpu/ {print $3}' /proc/self/cgroup)"
+      ports:
+        - name: prometheus
+          containerPort: 8080
+      volumeMounts:
+        - name: powercap
+          mountPath: /sys/class/powercap

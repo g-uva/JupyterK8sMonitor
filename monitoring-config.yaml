@@ -1,0 +1,8 @@
+prometheus:
+  prometheusSpec:
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector:
+      any: true
+grafana:
+  adminUser: goncalo
+  adminPassword: greendigit2025

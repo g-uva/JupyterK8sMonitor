@@ -1,0 +1,21 @@
+hub:
+  config:
+    JupyterHub:
+      tornado_settings:
+        xheaders: true
+    Authenticator:
+      admin_users:
+        - goncalo
+        # - user2
+      # allowed_users:
+        # - user3
+        # - user4
+    # ...
+    DummyAuthenticator:
+      password: goncalo
+    JupyterHub:
+      authenticator_class: dummy
+
+proxy:
+  https:
+    enabled: false

@@ -1,0 +1,57 @@
+proxy:
+ https:
+   enabled: false
+
+hub:
+  config:
+    JupyterHub:
+      tornado_settings:
+        xheaders: true
+    Authenticator:
+      admin_users:
+        - shashikant
+        - yuri
+        - adnan
+        - quint
+        - goncalo
+    DummyAuthenticator:
+      password: greendigit2025
+    JupyterHub:
+      authenticator_class: dummy
+
+
+singleuser:
+  #  app: jupyterhub # <- the label must be matching with the podmonitor in scaphandre.
+  image:
+    name: jupyter/datascience-notebook
+    tag: latest
+
+  # Mount host paths so Scaphandre can read powercap and proc
+  storage:
+    extraVolumes:
+      - name: powercap
+        hostPath:
+          path: /sys/class/powercap
+          type: Directory
+      - name: proc
+        hostPath:
+          path: /proc
+          type: Directory
+    
+    extraVolumeMounts:
+      - name: powercap
+        mountPath: /sys/class/powercap
+      - name: proc
+        mountPath: /proc
+
+  extraContainers:
+    - name: scaphandre
+      image: hubblo/scaphandre:latest              # official Scaphandre Docker image :contentReference[oaicite:0]{index=0}
+      args:
+        - prometheus
+        - "--address=0.0.0.0"
+        - "--port=8080"                           # default metrics port :contentReference[oaicite:1]{index=1}
+        - "--containers"
+      ports:
+        - name: metrics
+          containerPort: 8080
