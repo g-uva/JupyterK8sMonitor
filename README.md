@@ -45,21 +45,28 @@ helm upgrade --install jhub jupyterhub/jupyterhub -n jhub --values ./jhub-config
 4. Apply PodMonitor and Nginx configurations.
 5. The app should be ready to use! 👍
 
----
-
-#### Run workflows and extract metrics (examples)
-For the moment, the configuration files can be found in `/home/goncalo/jhub-helm-config/export-metrics-pod/`.
-The only relevant files are:
+#### Metrics files (to be organised by @goncalo)
 - Files to be run **outside** of the cluster (this should be done, not to worry about the Kubernetes-only user):
      - `pod-reader-rolebinding.yaml`: It allows Jupyter to read Kube and Pod configuration from within the Pod.
           - You must run `kubectl apply -f export-metrics-pod/pod-reader-rolebinding.yaml` during the configuration on the local server, outside of the Kubernetes cluster.
-- Files to be copied and ran inside the Jupyter Notebook interface:
-     - `export_metrics_ownpod.py`: copy it to the `root` (typically `/home/jovyan`).
-     - `export-metrics.sh`: copy it to the `root` + execute `chmod +x ./export-metrics.sh` in order to make it executable.
+---
+
+#### Run workflows and extract metrics (examples)
+For the moment, the configuration files can be found in `/home/goncalo/jhub-helm-config/export-metrics-pod/`
+- Download the script files from the [Google Drive folder](https://drive.google.com/drive/folders/1NuyVLMKWd6GW7lNOmeb9H2g25PlrpqXT?usp=drive_link).
+
+Notebook and package files:
+- `analysis.ipynb`: example notebook file provided by Shashikant.
+- `requirements.txt`: list of packages to be installed by Python (for now it is manual).
+    - Run `pip install -r requirements.txt` to install the packages needed to run the notebook.
+
+List of files and actions:
+- `export_metrics_ownpod.py`: copy it to the `root` (typically `/home/jovyan`).
+- `export-metrics.sh`: copy it to the `root` + execute `chmod +x ./export-metrics.sh` in order to make it executable.
 
 ##### Example notebooks tutorial
 > For the moment, some example notebooks can be used to simulate the workflow.
-- Download the script files from the [Google Drive folder](https://drive.google.com/drive/folders/1NuyVLMKWd6GW7lNOmeb9H2g25PlrpqXT?usp=drive_link).
+
 > The example notebooks' data can be downloaded from the following links:
 - [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
     1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
