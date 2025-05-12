@@ -1,0 +1,24 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: jhub
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: jhub
+  name: pod-reader-binding
+subjects:
+  - kind: ServiceAccount
+    name: default     # adjust if you’re using a custom SA
+    namespace: jhub
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io

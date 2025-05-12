@@ -59,9 +59,9 @@ singleuser:
         - ReadWriteOnce
 
     extraVolumes:
-      - name: export-script
-        configMap:
-          name: export-metrics-ownpod-script
+      # - name: export-script
+      #   configMap:
+      #     name: export-metrics-ownpod-script
       - name: powercap
         hostPath:
           path: /sys/class/powercap
@@ -82,10 +82,10 @@ singleuser:
           claimName: pvc-default-notebooks
 
     extraVolumeMounts:
-      - name: export-script
-        mountPath: /usr/local/bin/export_metrics.py
-        subPath: export_metrics.py
-        readOnly: true
+      # - name: export-script
+      #   mountPath: /usr/local/bin/export_metrics.py
+      #   subPath: export_metrics.py
+      #   readOnly: true
       - name: powercap
         mountPath: /sys/class/powercap
       - name: proc
@@ -124,11 +124,13 @@ singleuser:
       ports:
         - name: metrics
           containerPort: 8081
-  extraEnv:
-    - name: POD_NAME
-      valueFrom:
-        fieldRef:
-          fieldPath: metadata.name
+  # extraEnv:
+  #   - name: POD_NAME
+  #     valueFrom:
+  #       fieldRef:
+  #         fieldPath: metadata.name
+  extraPodConfig:
+    automountServiceAccountToken: true
 
 
 # ==========================
