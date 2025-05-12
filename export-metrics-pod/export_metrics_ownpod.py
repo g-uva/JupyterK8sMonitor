@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Export Scaphandre energy metrics for *this* pod only, without any kube-config.
 Fetches all scaph_* metrics from Prometheus over a user-specified window
@@ -9,11 +8,7 @@ Requires:
 
 Usage:
     export PROM_URL=http://<prom-host>:9090
-    python export_metrics.py \
-      [--pod-name my-pod-abc123] \
-      [--start-time 2025-05-12T08:00:00Z] \
-      [--end-time   2025-05-12T10:30:00Z] \
-      [--output-dir /home/javyan/export-metrics]
+    python export_metrics.py
 """
 
 import os
@@ -33,7 +28,8 @@ def parse_time(s: str) -> datetime:
 
 def export_metrics(pod_name: str, start_time: datetime, end_time: datetime, output_root: str):
     prom = PrometheusConnect(
-        url=os.getenv("PROM_URL", "http://localhost:9090"),
+        # url=os.getenv("PROM_URL", "http://prometheus-grafana-kube-pr-prometheus.monitoring.svc.cluster.local:9090"),
+        "http://prometheus-grafana-kube-pr-prometheus.monitoring.svc.cluster.local:9090",
         disable_ssl=True
     )
 
@@ -104,6 +100,7 @@ def generate_rocrate(base_dir, pod_name, metrics, start_time, end_time):
 
 
 if __name__ == "__main__":
+    config.load_incluster_config()
     v1 = client.CoreV1Api()
     p = argparse.ArgumentParser()
     
@@ -117,17 +114,17 @@ if __name__ == "__main__":
     #                help="Where to write CSVs + RO-Crate JSON")
     args = p.parse_args()
 
-    pod = args.pod_name or os.getenv("POD_NAME") or os.uname().nodename
+    pod_name = os.getenv("POD_NAME") or os.uname().nodename
     # now = datetime.now(timezone.utc)
     
-    pod = v1.read_namespaced_pod(name=pod, namespace="jhub")
+    pod = v1.read_namespaced_pod(name=pod_name, namespace="jhub")
     start = pod.status.start_time
     end = datetime.now(timezone.utc)
     
-    output_dir = "/home/javyan/export-metrics"
+    output_dir = "/home/jovyan/export-metrics"
     os.makedirs(output_dir, exist_ok=True) # Ensure that the output directory exists
     
     # start = parse_time(args.start_time) if args.start_time else (now - timedelta(hours=24))
     # end   = parse_time(args.end_time)   if args.end_time   else now
 
-    export_metrics(pod, start, end, output_dir)
+    export_metrics(pod_name, start, end, output_dir)
