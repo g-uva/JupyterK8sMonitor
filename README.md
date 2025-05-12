@@ -7,6 +7,7 @@ This is a configuration for the server: https://mc-a4.lab.uvalight.net/.
 To install the repo, just run: `git clone git@github.com:g-uva/jhub-helm-config.git`.
 - Repository on Github: https://github.com/g-uva/jhub-helm-config.
 
+---
 
 #### Infrastructure configuration
 > The reference for the steps come from the official Zero to Jupyter documentation.
