@@ -40,14 +40,6 @@ helm install monitoring prometheus-community/kube-prometheus-stack \
 # Update any repository (in case the YAML file is changed).
 # Note: replace the namespace and repository accordingly.
 helm upgrade --install jhub jupyterhub/jupyterhub -n jhub --values ./jhub-config.yaml
-
-
-export-metrics/
-└── 1a2b3c4d_jupyter-goncalo_jupyter-experiment/
-    ├── scaph_host_energy_microwatts.csv
-    ├── scaph_process_power_consumption.csv
-    └── ... other scaph_*.csv files
-ro-crate-metadata.json
 ```
 
 4. Apply PodMonitor and Nginx configurations.
@@ -75,6 +67,15 @@ The only relevant files are:
     3. [Dataset 02](https://drive.google.com/file/d/1svqM1wrkxtCk9nZ90aJEvXGlBnNr8kRN/view?usp=drive_link) 
 - [Workflow 2](https://github.com/atlarge-research/2024-icpads-hpc-workload-characterization)
 - Enol's notebook (not done yet).
+
+```sh
+export-metrics/
+└── 1a2b3c4d_jupyter-goncalo_jupyter-experiment/
+    ├── scaph_host_energy_microwatts.csv
+    ├── scaph_process_power_consumption.csv
+    └── ... other scaph_*.csv files
+ro-crate-metadata.json
+```
 
 ##### Exiting the notebook
 For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
