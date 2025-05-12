@@ -2,8 +2,12 @@
 This is the repository that contains the configuration files for the Helm Zero to Jupyter Kubernetes cluster with Scaphandre.
 
 This is a configuration for the server: https://mc-a4.lab.uvalight.net/.
+> If you want to have access to the server (filesystem and others), please contact g.j.teixeiradepinhoferreira@uva.nl.
 
-- [ ] Move this to a separate repository.
+To install the repo, just run: `git clone git@github.com:g-uva/jhub-helm-config.git`.
+- Repository on Github: https://github.com/g-uva/jhub-helm-config.
+
+
 
 > The reference for the steps come from the official Zero to Jupyter documentation.
 1. Install Helm.
