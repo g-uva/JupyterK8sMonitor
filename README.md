@@ -53,6 +53,7 @@ ro-crate-metadata.json
 4. Apply PodMonitor and Nginx configurations.
 5. The app should be ready to use! 👍
 
+---
 
 #### Run workflows and extract metrics (examples)
 For the moment, the configuration files can be found in `/home/goncalo/jhub-helm-config/export-metrics-pod/`.
