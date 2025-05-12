@@ -46,7 +46,7 @@ def export_metrics(pod_name: str, start_time: datetime, end_time: datetime, outp
     now = datetime.now()
     ts = int(now.timestamp())
     os.makedirs(output_root, exist_ok=True)
-    main_dir = os.path.join(output_root, f"{random_hex}-{ts}-{pod_name}-export")
+    main_dir = os.path.join(output_root, f"{random_hex}-{ts}-{pod_name}-experiment")
     metrics_dir = os.path.join(main_dir, csv_dir_name)
     os.makedirs(metrics_dir, exist_ok=True)
 
