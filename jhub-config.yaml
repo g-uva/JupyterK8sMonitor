@@ -49,10 +49,19 @@ singleuser:
     tag: latest
 
   storage:
+    type: dynamic
+    capacity: 5Gi
+    homeMountPath: /home/jovyan
+    dynamic:
+      storageClass: standard
+      pvcNameTemplate: claim-{username}
+      storageAccessModes:
+        - ReadWriteOnce
+
     extraVolumes:
       - name: export-script
         configMap:
-          name: export-metrics-script
+          name: export-metrics-ownpod-script
       - name: powercap
         hostPath:
           path: /sys/class/powercap
@@ -68,6 +77,9 @@ singleuser:
       - name: nginx-config
         configMap:
           name: scaphandre-nginx-config
+      - name: default-notebooks
+        persistentVolumeClaim:
+          claimName: pvc-default-notebooks
 
     extraVolumeMounts:
       - name: export-script
@@ -81,6 +93,10 @@ singleuser:
       - name: containerd-sock
         mountPath: /run/containerd/containerd.sock
         readOnly: true
+      - name: default-notebooks
+        mountPath: /home/jovyan/default-notebooks
+        readOnly: false
+
 
   extraContainers:
     - name: scaphandre
@@ -93,7 +109,7 @@ singleuser:
       ports:
         - name: rawmetrics
           containerPort: 8080
-# Temporary fix
+    # Temporary fix
     - name: proxy-metrics
       image: nginx:stable-alpine
       volumeMounts:
@@ -108,6 +124,11 @@ singleuser:
       ports:
         - name: metrics
           containerPort: 8081
+  extraEnv:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
 
 
 # ==========================
