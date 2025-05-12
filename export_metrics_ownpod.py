@@ -1,119 +1,133 @@
+#!/usr/bin/env python3
 """
-Script to export per-session Scaphandre energy metrics for all active JupyterHub singleuser pods.
-Detects pods in the "jhub" namespace with label "component=singleuser-server",
-fetches the power consumption metric from Prometheus over each pod's lifetime,
-and writes a CSV file per pod.
+Export Scaphandre energy metrics for *this* pod only, without any kube-config.
+Fetches all scaph_* metrics from Prometheus over a user-specified window
+(or the last 24 h by default), writes one CSV per metric, and generates RO-Crate JSON.
 
-Requirements:
-  pip install kubernetes prometheus_api_client pandas
+Requires:
+    pip install prometheus_api_client pandas
 
 Usage:
-  export PROM_URL=http://<prometheus-host>:9090
-  python export_scaphandre_metrics.py [--namespace jhub] [--output-dir ./metrics]
+    export PROM_URL=http://<prom-host>:9090
+    python export_metrics.py \
+      [--pod-name my-pod-abc123] \
+      [--start-time 2025-05-12T08:00:00Z] \
+      [--end-time   2025-05-12T10:30:00Z] \
+      [--output-dir /home/javyan/export-metrics]
 """
+
 import os
-import secrets
 import json
-from datetime import datetime, timezone
-from prometheus_api_client import PrometheusConnect
+import secrets
+from datetime import datetime, timezone, timedelta
+import argparse
 from kubernetes import client, config
 import pandas as pd
+from prometheus_api_client import PrometheusConnect
 
-def export_metrics():
-    # Load in-cluster or local kubeconfig
-    try:
-        config.load_incluster_config()
-    except config.ConfigException:
-        config.load_kube_config()
-        
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_root = f"./{timestamp}_metrics_export"
-    
-    namespace = "jhub"
 
-    # Connect to Prometheus
-    prom = PrometheusConnect(url=os.getenv("PROM_URL", "http://localhost:8000"), disable_ssl=True)
-    v1 = client.CoreV1Api()
+def parse_time(s: str) -> datetime:
+    # Accept only ISO-8601 with 'Z' or offset
+    return datetime.fromisoformat(s.replace("Z", "+00:00"))
 
-    # Generate unique experiment ID (8 hex chars)
-    experiment_id = secrets.token_hex(4)  # 32-bit hex
-    # Discover all scaph_ metrics
+
+def export_metrics(pod_name: str, start_time: datetime, end_time: datetime, output_root: str):
+    prom = PrometheusConnect(
+        url=os.getenv("PROM_URL", "http://localhost:9090"),
+        disable_ssl=True
+    )
+
+    # Discover scaph_ metrics
     all_metrics = prom.get_label_values(label_name="__name__")
     scaph_metrics = sorted(m for m in all_metrics if m.startswith("scaph_"))
     print(f"Detected Scaphandre metrics: {scaph_metrics}")
 
-    # Discover singleuser pods
-    pods = v1.list_namespaced_pod(namespace=namespace, label_selector="component=singleuser-server")
-    start_time = datetime.now(timezone.utc)
-    end_time = datetime.now(timezone.utc)
+    # Prepare output directories
+    os.makedirs(output_root, exist_ok=True)
+    main_dir = os.path.join(output_root, f"{pod_name}_export")
+    metrics_dir = os.path.join(main_dir, "metrics")
+    os.makedirs(metrics_dir, exist_ok=True)
 
-    for pod in pods.items:
-        pod_name = pod.metadata.name
-        start_ts = pod.metadata.creation_timestamp
-        end_ts = pod.metadata.deletion_timestamp or datetime.now(timezone.utc)
-        
-        # Create a per-pod experiment folder including pod name
-        folder_name = f"{experiment_id}_{pod_name}_jupyter-experiment"
-        pod_dir = os.path.join(output_root, folder_name)
+    # Pull and dump each metric
+    for metric in scaph_metrics:
+        print(f" → Exporting {metric} for pod {pod_name}")
+        data = prom.get_metric_range_data(
+            metric_name=metric,
+            start_time=start_time,
+            end_time=end_time,
+            label_config={"pod": pod_name}
+        )
+        if not data:
+            print(f"    • no data for {metric}")
+            continue
+
+        # Build DataFrame
+        rows = [
+            {
+                "timestamp": datetime.fromtimestamp(float(ts), tz=timezone.utc),
+                metric: float(val)
+            }
+            for ts, val in data[0].get("values", [])
+        ]
+        df = pd.DataFrame(rows)
+
+        # Write CSV
+        pod_dir = os.path.join(metrics_dir, pod_name)
         os.makedirs(pod_dir, exist_ok=True)
+        csv_path = os.path.join(pod_dir, f"{metric}.csv")
+        df.to_csv(csv_path, index=False)
+        print(f"    • wrote {len(df)} rows to {csv_path}")
 
-        for metric in scaph_metrics:
-            print(f"Exporting {metric} for pod {pod_name}")
-            # Fetch the metric range over the session
-            data = prom.get_metric_range_data(
-                metric_name=metric,
-                start_time=start_ts,
-                end_time=end_ts,
-                label_config={"pod": pod_name},
-            )
-            if not data:
-                print(f"No data for {metric} on {pod_name}")
-                continue
-            # Assume single timeseries per metric/pod
-            series = data[0]
-            rows = [
-                {
-                    "timestamp": datetime.fromtimestamp(float(ts), tz=timezone.utc),
-                    metric: float(val)
-                }
-                for ts, val in series.get('values', [])
-            ]
-            df = pd.DataFrame(rows)
-            csv_path = os.path.join(pod_dir, f"{metric}.csv")
-            df.to_csv(csv_path, index=False)
-            print(f"  → Wrote {len(df)} rows to {csv_path}")
+    # RO-Crate metadata
+    generate_rocrate(main_dir, pod_name, scaph_metrics, start_time, end_time)
+    print(f"All done! Files under {main_dir}")
 
-    # Generate RO-Crate metadata for entire experiment
-    generate_rocrate(output_root, experiment_id, start_ts, end_ts, scaph_metrics, pods)
 
-def generate_rocrate(output_root, experiment_id, start_time, end_time, metrics, pods):
-    # Build list of part file paths
-    has_parts = []
-    for pod in pods.items:
-        pod_name = pod.metadata.name
-        folder_name = f"{experiment_id}_{pod_name}_jupyter-experiment"
-        for metric in metrics:
-            has_parts.append(f"{folder_name}/{metric}.csv")
+def generate_rocrate(base_dir, pod_name, metrics, start_time, end_time):
+    has_parts = [f"metrics/{pod_name}/{m}.csv" for m in metrics]
     metadata = {
         "@context": "https://w3id.org/ro/crate/1.1/context",
-        "@graph": [
-            {
-                "@id": "ro-crate-metadata.json",
-                "@type": "CreativeWork",
-                "conformsTo": {"@id": "https://w3id.org/ro/crate/1.1"},
-                "about": {"@id": ""},
-                "dateCreated": start_time.isoformat(),
-                "datePublished": end_time.isoformat(),
-                "hasPart": has_parts
-            }
-        ]
+        "@graph": [{
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "conformsTo": {"@id": "https://w3id.org/ro/crate/1.1"},
+            "about": {"@id": ""},
+            "dateCreated": start_time.isoformat(),
+            "datePublished": end_time.isoformat(),
+            "hasPart": has_parts
+        }]
     }
-    metadata_path = os.path.join(output_root, "ro-crate-metadata.json")
-    with open(metadata_path, "w") as f:
+    path = os.path.join(base_dir, "ro-crate-metadata.json")
+    with open(path, "w") as f:
         json.dump(metadata, f, indent=2)
-    print(f"RO-Crate metadata generated at {metadata_path}")
+    print(f"RO-Crate metadata at {path}")
+
 
 if __name__ == "__main__":
-    export_metrics()
+    v1 = client.CoreV1Api()
+    p = argparse.ArgumentParser()
+    
+    # p.add_argument("--pod-name",
+    #                help="Pod to query (defaults to $POD_NAME or hostname)")
+    # p.add_argument("--start-time",
+    #                help="ISO timestamp (e.g. 2025-05-12T08:00:00Z). Defaults to 24 h ago.")
+    # p.add_argument("--end-time",
+    #                help="ISO timestamp (e.g. 2025-05-12T10:30:00Z). Defaults to now.")
+    # p.add_argument("--output-dir", default="metrics_export",
+    #                help="Where to write CSVs + RO-Crate JSON")
+    args = p.parse_args()
 
+    pod = args.pod_name or os.getenv("POD_NAME") or os.uname().nodename
+    # now = datetime.now(timezone.utc)
+    
+    pod = v1.read_namespaced_pod(name=pod, namespace="jhub")
+    start = pod.status.start_time
+    end = datetime.now(timezone.utc)
+    
+    output_dir = "/home/javyan/export-metrics"
+    os.makedirs(output_dir, exist_ok=True) # Ensure that the output directory exists
+    
+    # start = parse_time(args.start_time) if args.start_time else (now - timedelta(hours=24))
+    # end   = parse_time(args.end_time)   if args.end_time   else now
 
+    export_metrics(pod, start, end, output_dir)
