@@ -8,7 +8,7 @@ To install the repo, just run: `git clone git@github.com:g-uva/jhub-helm-config.
 - Repository on Github: https://github.com/g-uva/jhub-helm-config.
 
 
-
+#### Infrastructure configuration
 > The reference for the steps come from the official Zero to Jupyter documentation.
 1. Install Helm.
 2. Install Kubernetes and `kubectl`.
@@ -49,6 +49,10 @@ export-metrics/
 ro-crate-metadata.json
 ```
 
+4. Apply PodMonitor and Nginx configurations.
+5. The app should be ready to use! 👍
+
+
 #### Run workflows and extract metrics (examples)
 For the moment, the configuration files can be found in `/home/goncalo/jhub-helm-config/export-metrics-pod/`.
 The only relevant files are:
@@ -61,6 +65,7 @@ The only relevant files are:
 
 ##### Example notebooks tutorial
 > For the moment, some example notebooks can be used to simulate the workflow.
+- Download the script files from the [Google Drive folder](https://drive.google.com/drive/folders/1NuyVLMKWd6GW7lNOmeb9H2g25PlrpqXT?usp=drive_link).
 > The example notebooks' data can be downloaded from the following links:
 - [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
     1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
@@ -71,7 +76,3 @@ The only relevant files are:
 
 ##### Exiting the notebook
 For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
-
-
-4. Apply PodMonitor and Nginx configurations.
-5. The app should be ready to use! 👍
