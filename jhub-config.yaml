@@ -1,15 +1,10 @@
-# proxy:
-  # https:
-  #   enabled: false
+proxy:
+  https:
+    enabled: false
   # hosts:
   #   - mc-a4.lab.uvalight.net
   # pathSuffix: /jupyter(/|$)(.*)
   # pathType: ImplementationSpecific
-
-proxy:
-  service:
-    type: LoadBalancer
-    loadBalancerIP: 192.168.49.240
 
 
 hub:
@@ -130,13 +125,18 @@ singleuser:
       ports:
         - name: metrics
           containerPort: 8081
-  # extraEnv:
+  
+  uid: 0
+  allowPrivilegeEscalation: true
+  cmd: null
+  extraEnv:
+    GRANT_SUDO: "1"
+    NOTEBOOK_ARGS: "--allow-root"
+
   #   - name: POD_NAME
   #     valueFrom:
   #       fieldRef:
   #         fieldPath: metadata.name
-  extraPodConfig:
-    automountServiceAccountToken: true
 
 
 # ==========================
