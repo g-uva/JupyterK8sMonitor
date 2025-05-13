@@ -20,6 +20,7 @@ import argparse
 from kubernetes import client, config
 import pandas as pd
 from prometheus_api_client import PrometheusConnect
+from generate_metadata import generate_rocrate
 
 csv_dir_name = "csv"
 
