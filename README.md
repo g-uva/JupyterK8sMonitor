@@ -40,6 +40,17 @@ helm install monitoring prometheus-community/kube-prometheus-stack \
 # Update any repository (in case the YAML file is changed).
 # Note: replace the namespace and repository accordingly.
 helm upgrade --install jhub jupyterhub/jupyterhub -n jhub --values ./jhub-config.yaml
+
+# Port-binding for a permanent port-forward, not terminal dependency
+# 1. The "typical" way would be:
+kubectl -n jhub port-forward svc/proxy-public 8000:80 # or http
+
+# This however, poses some problems. As even with `disown`, the terminal is tied to the serving.
+# If we just change the reverse-proxy for the created EXTERNAL-IP and patch it, we have Kubernetes receiving
+kubectl -n jhub patch svc proxy-public \
+  --type='merge' \
+  -p '{"spec":{"externalIPs":["192.168.49.2"]}}'
+
 ```
 
 4. Apply PodMonitor and Nginx configurations.
