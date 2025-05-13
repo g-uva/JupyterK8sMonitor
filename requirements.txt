@@ -1,3 +1,0 @@
-prometheus_api_client
-kubernetes
-pandas
