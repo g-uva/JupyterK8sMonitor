@@ -58,6 +58,14 @@ hub:
           }
           return pod
       c.KubeSpawner.modify_pod_hook = modify_pod
+  extraEnv:
+    HUB_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: hub-password-secret
+          key: HUB_PASSWORD
+
+
 
 singleuser:
   image:
