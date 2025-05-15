@@ -1,7 +1,4 @@
 #!/bin/bash
-
-
-
 mkdir -p /home/jovyan/.bin
 cd /home/jovyan/.bin
 mv install-scaphandre-prometheus.sh /home/jovyan/.bin/
@@ -31,7 +28,7 @@ nohup scaphandre prometheus --address=0.0.0.0 --port=8081 --containers > scaphan
 cd /home/jovyan/.bin/
 wget https://github.com/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
 tar xzf prometheus-2.52.0.linux-amd64.tar.gz
-mv prometheus-2.52.0.linux-amd64 prometheus-unzipped
+mv ./prometheus-2.52.0.linux-amd64 /home/jovyan/.bin/prometheus-unzipped
 rm -rf prometheus-2.52.0.linux-amd64.tar.gz
 
 # Start Prometheus server
@@ -57,3 +54,4 @@ nohup /home/jovyan/.bin/prometheus-unzipped/prometheus --config.file=prometheus.
 # mv grafana-enterprise-9.5.2 grafana-unzipped
 # rm -rf grafana-enterprise-9.5.2.linux-amd64.tar.gz
 # cd grafana-unzipped
+

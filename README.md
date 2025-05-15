@@ -121,8 +121,15 @@ For the moment, in order to "kill" the pod, the server must be stopped. To do th
 
 #### Install Scaphandre, Prometheus script
 ```sh
-mkdir -p ~/.bin/ && cd ~/.bin/
 curl -O https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
 chmod +x install-scaphandre-prometheus.sh
 ./install-scaphandre-prometheus.sh
+```
+```sh
+mkdir -p /home/jovyan/scripts/
+wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/export-metrics-service/export-metrics-pod/export_metrics_ownpod_container.py
+wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
+
+# To export the metrics.
+sudo -E python3 /home/jovyan/scripts/export_metrics_ownpod_container.py
 ```
