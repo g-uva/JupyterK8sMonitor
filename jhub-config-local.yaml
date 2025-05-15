@@ -1,28 +1,9 @@
 proxy:
   https:
     enabled: false
-  # hosts:
-  #   - mc-a4.lab.uvalight.net
-  # pathSuffix: /jupyter(/|$)(.*)
-  # pathType: ImplementationSpecific
-
 
 hub:
   config:
-    Spawner:
-      post_stop_hook: |
-        def post_stop_hook(spawner):
-            import subprocess, os
-            # Namespace is usually spawner.namespace
-            ns = spawner.namespace
-            outdir = "/mnt/data"
-            # Call your exporter binary/script that's in the Hub container
-            subprocess.Popen([
-                "python3",
-                "/usr/local/bin/export_scaphandre_metrics.py",
-                "--namespace", ns,
-                "--output-dir", outdir
-            ])
     JupyterHub:
       baseUrl: "/jupyter"
       tornado_settings:
@@ -39,8 +20,6 @@ hub:
         - adnan
         - quint
         - goncalo
-    # DummyAuthenticator:
-    #   password: greendigit2025
     JupyterHub:
       authenticator_class: dummy
   extraConfig:
@@ -58,12 +37,6 @@ hub:
           }
           return pod
       c.KubeSpawner.modify_pod_hook = modify_pod
-  # extraEnv:
-  #   HUB_PASSWORD:
-  #     valueFrom:
-  #       secretKeyRef:
-  #         name: hub-password-secret
-  #         key: HUB_PASSWORD
 
 
 
@@ -72,14 +45,8 @@ singleuser:
     name: jupyter/datascience-notebook
     tag: latest
 
-  # https://discourse.jupyter.org/t/cannot-use-sudo-have-root-access-using-jupyterhub-with-kubernetes/12548/6
   uid: 0
   fsGid: 0
-  # extraEnv:
-  #   GRANT_SUDO: "yes" # or "1" in some cases.
-  #   NOTEBOOK_ARGS: "--allow-root"
-
-
   # extraPodConfig:
   #   automountServiceAccountToken: true
   cmd:
