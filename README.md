@@ -117,3 +117,12 @@ Currently metrics can be exported in two ways:
 
 ##### Exiting the notebook
 For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
+
+
+#### Install Scaphandre, Prometheus script
+```sh
+mkdir -p ~/.bin/ && cd ~/.bin/
+curl -O https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
+chmod +x install-scaphandre-prometheus.sh
+./install-scaphandre-prometheus.sh
+```
