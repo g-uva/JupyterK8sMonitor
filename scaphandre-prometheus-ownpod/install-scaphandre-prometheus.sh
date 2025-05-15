@@ -1,7 +1,10 @@
 #!/bin/bash
 
+
+
 mkdir -p /home/jovyan/.bin
 cd /home/jovyan/.bin
+mv install-scaphandre-prometheus.sh /home/jovyan/.bin/
 
 # First updates
 sudo apt-get update
