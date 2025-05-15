@@ -11,7 +11,7 @@ rustup install 1.65.0 # Install Rust 1.65.0
 rustup override set 1.65.0 # Set the default version to 1.65.0
 
 # Install Scaphandre
-cd ~/.bin/
+cd /home/jovyan/.bin/
 git clone https://github.com/hubblo-org/scaphandre.git
 cd scaphandre
 cargo build --release
@@ -22,7 +22,7 @@ cd ~ && rm -rf scaphandre
 nohup scaphandre prometheus --address=0.0.0.0 --port=8081 --containers > scaphandre.log 2>&1 &
 
 # Install Prometheus
-cd ~/.bin/
+cd /home/jovyan/.bin/
 wget https://github.com/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
 tar xzf prometheus-2.52.0.linux-amd64.tar.gz
 mv prometheus-2.52.0.linux-amd64 prometheus-unzipped
@@ -41,11 +41,11 @@ EOF
 )
 
 echo "$PROMETHEUS_CONFIG" > prometheus.yml
-nohup ~/.bin/prometheus-unzipped/prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 > prometheus.log 2>&1 &
+nohup /home/jovyan/.bin/prometheus-unzipped/prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 > prometheus.log 2>&1 &
 
 
 # Install Grafana
-# cd ~/.bin/
+# cd /home/jovyan/.bin/
 # wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.5.2.linux-amd64.tar.gz
 # tar xzf grafana-enterprise-9.5.2.linux-amd64.tar.gz
 # mv grafana-enterprise-9.5.2 grafana-unzipped
