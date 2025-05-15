@@ -5,8 +5,8 @@ This is the repository that contains the configuration files for the Helm Zero t
 This is a configuration for the server: https://mc-a4.lab.uvalight.net/.
 > If you want to have access to the server (filesystem and others), please contact g.j.teixeiradepinhoferreira@uva.nl.
 
-To install the repo, just run: `git clone git@github.com:g-uva/jhub-helm-config.git`.
-- Repository on Github: https://github.com/g-uva/jhub-helm-config.
+To install the repo, just run: `git clone git@github.com:g-uva/jupyterhub-scaphandre-monitor.git`.
+- Repository on Github: https://github.com/g-uva/jupyterhub-scaphandre-monitor.
 
 ---
 
@@ -25,8 +25,8 @@ sudo chown -R $(whoami):$(whoami) ~ # Extending the automatic reading/writing ac
 1. Install Helm.
 2. Install Kubernetes and `kubectl`.
 3. Install all the repositories from Helm using the `yaml` files. There are two main flavours that we can choose from:
-    1. `jhub-helm-config/jhub-config.yaml`: configuration for Spawner with Scaphandre sidecar.
-    2. `jhub-helm-config/jhub-config-local.yaml`: configuration for Scaphandre to be installed locally.
+    1. `jupyterhub-scaphandre-monitor/jhub-config.yaml`: configuration for Spawner with Scaphandre sidecar.
+    2. `jupyterhub-scaphandre-monitor/jhub-config-local.yaml`: configuration for Scaphandre to be installed locally.
 ```sh
 # -------------
 # JupyterHub chart installation.
@@ -82,8 +82,8 @@ ro-crate-metadata.json
 
 #### Export metrics approaches
 Currently metrics can be exported in two ways:
-1. Locally if you have access to your server. `jhub-helm-config/export-metrics-service/export-metrics-local`.
-2. From your container/pod. `jhub-helm-config/export-metrics-service/export-metrics-pod`.
+1. Locally if you have access to your server. `jupyterhub-scaphandre-monitor/export-metrics-service/export-metrics-local`.
+2. From your container/pod. `jupyterhub-scaphandre-monitor/export-metrics-service/export-metrics-pod`.
 
 *We're going to describe only the second option as it requires Scaphandre/Prometheus installation from within the Pod/Container (JupyterNotebook).*
 > WIP @goncalo
@@ -121,14 +121,14 @@ For the moment, in order to "kill" the pod, the server must be stopped. To do th
 
 #### Install Scaphandre, Prometheus script
 ```sh
-curl -O https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
+curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
 chmod +x install-scaphandre-prometheus.sh
 ./install-scaphandre-prometheus.sh
 ```
 ```sh
 mkdir -p /home/jovyan/scripts/
-wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/export-metrics-service/export-metrics-pod/export_metrics_ownpod_container.py
-wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
+wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/export_metrics_ownpod_container.py
+wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
 
 # To export the metrics.
 sudo -E python3 /home/jovyan/scripts/export_metrics.py
