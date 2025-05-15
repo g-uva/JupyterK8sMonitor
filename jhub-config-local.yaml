@@ -23,6 +23,8 @@ hub:
     JupyterHub:
       authenticator_class: dummy
   extraConfig:
+    enable-api-accces: |
+      c.KubeSpawner.automount_serviceaccount_token = True
     allow-root: |
       from kubespawner import KubeSpawner
       def modify_pod(spawner: KubeSpawner, pod):
@@ -47,8 +49,6 @@ singleuser:
 
   uid: 0
   fsGid: 0
-  # extraPodConfig:
-  #   automountServiceAccountToken: true
   cmd:
     - bash
     - -c
@@ -56,15 +56,11 @@ singleuser:
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
-  
 
-  # allowPrivilegeEscalation: true
-  # # privileged: truee
-  # securityContext:
-  #   privileged: true
-  #   capabilities:
-  #     add:
-  #       - SYS_ADMIN
+  allowPrivilegeEscalation: true
+  
+  extraPodConfig:
+    automountServiceAccountToken: true
 
   storage:
     type: dynamic
@@ -82,32 +78,7 @@ singleuser:
           path: /sys
           type: Directory
 
-      # - name: proc
-      #   hostPath:
-      #     path: /proc
-      #     type: Directory
-  #     - name: containerd-sock
-  #       hostPath:
-  #         path: /run/containerd/containerd.sock
-  #         type: Socket
-  #     - name: nginx-config
-  #       configMap:
-  #         name: scaphandre-nginx-config
-  #     - name: default-notebooks
-  #       persistentVolumeClaim:
-  #         claimName: pvc-default-notebooks
-
     extraVolumeMounts:
       - name: sys
         mountPath: /sys
         readOnly: true
-
-  #     - name: proc
-  #       mountPath: /proc
-  #     - name: containerd-sock
-  #       mountPath: /run/containerd/containerd.sock
-  #       readOnly: true
-  #     - name: default-notebooks
-  #       mountPath: /home/jovyan/default-notebooks
-  #       readOnly: false
-
