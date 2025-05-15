@@ -131,5 +131,5 @@ wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.co
 wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jhub-helm-config/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
 
 # To export the metrics.
-sudo -E python3 /home/jovyan/scripts/export_metrics_ownpod_container.py
+sudo -E python3 /home/jovyan/scripts/export_metrics.py
 ```

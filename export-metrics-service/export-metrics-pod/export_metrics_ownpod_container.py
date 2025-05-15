@@ -42,7 +42,7 @@ def export_metrics(pod_name: str, start_time: datetime, end_time: datetime, outp
     now = datetime.now()
     ts = int(now.timestamp())
     os.makedirs(output_root, exist_ok=True)
-    main_dir = os.path.join(output_root, f"{random_hex}-{ts}-{pod_name}-export")
+    main_dir = os.path.join(output_root, f"{random_hex}-{ts}-{pod_name}-metrics-export")
     metrics_dir = os.path.join(main_dir, csv_dir_name)
     os.makedirs(metrics_dir, exist_ok=True)
 
@@ -68,20 +68,18 @@ def export_metrics(pod_name: str, start_time: datetime, end_time: datetime, outp
         ]
         df = pd.DataFrame(rows)
 
-        # Write CSV into the local folder.
-        pod_dir = os.path.join(metrics_dir, pod_name)
-        os.makedirs(pod_dir, exist_ok=True)
-        csv_path = os.path.join(pod_dir, f"{metric}.csv")
+
+        csv_path = os.path.join(metrics_dir, f"{metric}.csv")
         df.to_csv(csv_path, index=False)
         print(f"    • wrote {len(df)} rows to {csv_path}")
 
     # Generating RO-Crate metadata
-    generate_rocrate(main_dir, pod_name, scaph_metrics, start_time, end_time)
+    generate_rocrate(main_dir, scaph_metrics, start_time, end_time)
     print(f"All done! Files under {main_dir}")
 
 
-def generate_rocrate(base_dir, pod_name, metrics, start_time, end_time):
-    has_parts = [f"{csv_dir_name}/{pod_name}/{m}.csv" for m in metrics]
+def generate_rocrate(base_dir, metrics, start_time, end_time):
+    has_parts = [f"{csv_dir_name}/{m}.csv" for m in metrics]
     metadata = {
         "@context": "https://w3id.org/ro/crate/1.1/context",
         "@graph": [{
