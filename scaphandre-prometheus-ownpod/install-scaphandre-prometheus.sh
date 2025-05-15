@@ -1,5 +1,8 @@
 #!/bin/bash
 
+mkdir -p /home/jovyan/.bin
+cd /home/jovyan/.bin
+
 # First updates
 sudo apt-get update
 sudo apt-get install -y pkg-config libssl-dev lsof
