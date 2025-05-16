@@ -20,6 +20,7 @@ hub:
         - adnan
         - quint
         - goncalo
+        - ana
     JupyterHub:
       authenticator_class: dummy
   extraConfig:

@@ -40,6 +40,8 @@ wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com
 
 Finally, execute this command to create the metrics. The ouput folder should be `~/export-metrics/...`.
 ```sh
+cd /home/jovyan/scripts/
+pip install -r requirements.txt
 sudo -E python3 /home/jovyan/scripts/export_metrics.py
 ```
 
