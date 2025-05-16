@@ -1,6 +1,50 @@
 # 🌱🌍♻️ JupyterHub Scaphandre Monitor (GreenDIGIT project)
 This is the repository that contains the configuration files for the Helm Zero to Jupyter Kubernetes cluster with Scaphandre. This is an easy way to configure and deploy your application in Kubernetes using Scaphandre and JupyterHub.
 
+### Usage
+If you have access to access to the [deployment server](https://mc-a4.lab.uvalight.net), then you just need to follow these steps:
+1. Install and run Scaphandre and Prometheus.
+2. *Run your workflow.*
+3. Export CSV metrics (and download them).
+
+#### 1. Install and run Scaphandre and Prometheus.
+To install Scaphandre and Prometheus, you just need to copy and run this command on your notebook terminal.
+```sh
+curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
+chmod +x install-scaphandre-prometheus.sh
+./install-scaphandre-prometheus.sh
+```
+
+#### 2. Run your workflow (notebook examples)
+> For the moment, some example notebooks can be used to simulate the workflow.
+
+> The example notebooks' data can be downloaded from the following links:
+- [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
+    1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
+    2. [Dataset 01](https://drive.google.com/file/d/1cW7jggF2-TmPBrQEpJDtx0vOYs5Me8Cg/view?usp=drive_link)
+    3. [Dataset 02](https://drive.google.com/file/d/1svqM1wrkxtCk9nZ90aJEvXGlBnNr8kRN/view?usp=drive_link) 
+- [Workflow 2](https://github.com/atlarge-research/2024-icpads-hpc-workload-characterization)
+- Enol's notebook (not done yet).
+
+##### Exiting the notebook
+For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
+
+
+#### 3. Export CSV metrics (and download them).
+First you must run this script to create a `~/scripts/` folder and download a couple of scripts inside to run them.
+```sh
+mkdir -p /home/jovyan/scripts/
+wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/export_metrics_ownpod_container.py
+wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
+```
+
+Finally, execute this command to create the metrics. The ouput folder should be `~/export-metrics/...`.
+```sh
+sudo -E python3 /home/jovyan/scripts/export_metrics.py
+```
+
+---
+> WIP @goncalo
 #### Access to server and infrastructure deployment
 This is a configuration for the server: https://mc-a4.lab.uvalight.net/.
 > If you want to have access to the server (filesystem and others), please contact g.j.teixeiradepinhoferreira@uva.nl.
@@ -86,11 +130,6 @@ Currently metrics can be exported in two ways:
 2. From your container/pod. `jupyterhub-scaphandre-monitor/export-metrics-service/export-metrics-pod`.
 
 *We're going to describe only the second option as it requires Scaphandre/Prometheus installation from within the Pod/Container (JupyterNotebook).*
-> WIP @goncalo
-1. Install Scaphandre
-2. Expose Prometheus
-3. Run your workflow.
-4. Export metrics.
 
 #### Example notebooks/workflows
 <!-- - Download the script files from the [Google Drive folder](https://drive.google.com/drive/folders/1NuyVLMKWd6GW7lNOmeb9H2g25PlrpqXT?usp=drive_link). -->
@@ -103,33 +142,3 @@ Currently metrics can be exported in two ways:
 **List of files and actions:**
 - `export_metrics_ownpod.py`: copy it to the `root` (typically `/home/jovyan`).
 - `export-metrics.sh`: copy it to the `root` + execute `chmod +x ./export-metrics.sh` in order to make it executable.
-
-##### Example notebooks tutorial
-> For the moment, some example notebooks can be used to simulate the workflow.
-
-> The example notebooks' data can be downloaded from the following links:
-- [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
-    1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
-    2. [Dataset 01](https://drive.google.com/file/d/1cW7jggF2-TmPBrQEpJDtx0vOYs5Me8Cg/view?usp=drive_link)
-    3. [Dataset 02](https://drive.google.com/file/d/1svqM1wrkxtCk9nZ90aJEvXGlBnNr8kRN/view?usp=drive_link) 
-- [Workflow 2](https://github.com/atlarge-research/2024-icpads-hpc-workload-characterization)
-- Enol's notebook (not done yet).
-
-##### Exiting the notebook
-For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
-
-
-#### Install Scaphandre, Prometheus script
-```sh
-curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
-chmod +x install-scaphandre-prometheus.sh
-./install-scaphandre-prometheus.sh
-```
-```sh
-mkdir -p /home/jovyan/scripts/
-wget -qO /home/jovyan/scripts/export_metrics.py https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/export_metrics_ownpod_container.py
-wget -qO /home/jovyan/scripts/requirements.txt https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/requirements.txt
-
-# To export the metrics.
-sudo -E python3 /home/jovyan/scripts/export_metrics.py
-```
