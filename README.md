@@ -45,6 +45,13 @@ pip install -r requirements.txt
 sudo -E python3 /home/jovyan/scripts/export_metrics.py
 ```
 
+#### 3.1 (Bonus) Zip and download metrics
+```sh
+cd /home/jovyan/scripts/
+wget -qO /home/jovyan/scripts/package_metrics.py https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/export-metrics-service/export-metrics-pod/package_metrics.py
+sudo -E python3 /home/jovyan/scripts/package_metrics.py
+```
+
 ---
 > WIP @goncalo
 #### Access to server and infrastructure deployment
