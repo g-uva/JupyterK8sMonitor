@@ -17,7 +17,6 @@ chmod +x install-scaphandre-prometheus.sh
 
 #### 2. Run your workflow (notebook examples)
 > For the moment, some example notebooks can be used to simulate the workflow.
-
 > The example notebooks' data can be downloaded from the following links:
 - [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
     1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
