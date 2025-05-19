@@ -64,8 +64,8 @@ singleuser:
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
   
-  # extraPodConfig:
-  #   automountServiceAccountToken: true
+  extraPodConfig:
+    automountServiceAccountToken: true
 
   storage:
     type: dynamic
