@@ -21,6 +21,8 @@ hub:
         - quint
         - goncalo
         - ana
+        - kilian
+        - edouard
     JupyterHub:
       authenticator_class: dummy
   extraConfig:
