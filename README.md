@@ -26,14 +26,12 @@ chmod +x install-dependencies.sh
 install-dependencies.sh
 ```
 
-
 ##### 2.2 Other notebooks (WIP)
 - [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
     1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
     2. [Dataset 01](https://drive.google.com/file/d/1cW7jggF2-TmPBrQEpJDtx0vOYs5Me8Cg/view?usp=drive_link)
     3. [Dataset 02](https://drive.google.com/file/d/1svqM1wrkxtCk9nZ90aJEvXGlBnNr8kRN/view?usp=drive_link) 
 - [Workflow 2](https://github.com/atlarge-research/2024-icpads-hpc-workload-characterization)
-- Enol's notebook (not done yet).
 
 ##### Exiting the notebook
 For the moment, in order to "kill" the pod, the server must be stopped. To do that you must go to `File > Hub Control Panel` and click the button `Stop my server`
