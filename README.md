@@ -1,6 +1,11 @@
 # 🌱🌍♻️ JupyterHub Scaphandre Monitor (GreenDIGIT project)
 This is the repository that contains the configuration files for the Helm Zero to Jupyter Kubernetes cluster with Scaphandre. This is an easy way to configure and deploy your application in Kubernetes using Scaphandre and JupyterHub.
 
+
+#### Access to server and infrastructure deployment
+This is a configuration is deployed at the server: https://mc-a4.lab.uvalight.net/.
+> If you want to have access to the server (filesystem and others), please contact g.j.teixeiradepinhoferreira@uva.nl.
+
 ### Usage
 If you have access to access to the [deployment server](https://mc-a4.lab.uvalight.net), then you just need to follow these steps:
 1. Install and run Scaphandre and Prometheus.
@@ -61,14 +66,6 @@ sudo -E python3 /home/jovyan/scripts/package_metrics.py
 
 ---
 > WIP @goncalo
-#### Access to server and infrastructure deployment
-This is a configuration for the server: https://mc-a4.lab.uvalight.net/.
-> If you want to have access to the server (filesystem and others), please contact g.j.teixeiradepinhoferreira@uva.nl.
-
-To install the repo, just run: `git clone git@github.com:g-uva/jupyterhub-scaphandre-monitor.git`.
-- Repository on Github: https://github.com/g-uva/jupyterhub-scaphandre-monitor.
-
----
 
 #### Infrastructure configuration
 > The reference for the steps come from the official Zero to Jupyter documentation.
