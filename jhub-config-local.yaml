@@ -23,6 +23,8 @@ hub:
         - ana
         - kilian
         - edouard
+        - massimiliano
+        - enol
     JupyterHub:
       authenticator_class: dummy
   extraConfig:
