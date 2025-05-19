@@ -17,9 +17,6 @@ chmod +x install-scaphandre-prometheus.sh
 ```
 
 #### 2. Run your workflow (notebook examples)
-> For the moment, some example notebooks can be used to simulate the workflow.
-> The example notebooks' data can be downloaded from the following links:
-
 ##### 2.1 IceNet notebook example
 Run the following command:
 ```sh
