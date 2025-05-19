@@ -1,1 +1,0 @@
-# TODO: download the configuration file from the server.

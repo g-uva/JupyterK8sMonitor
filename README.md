@@ -18,6 +18,18 @@ chmod +x install-scaphandre-prometheus.sh
 #### 2. Run your workflow (notebook examples)
 > For the moment, some example notebooks can be used to simulate the workflow.
 > The example notebooks' data can be downloaded from the following links:
+
+##### 2.1 IceNet notebook example
+Run the following command:
+```sh
+git clone https://github.com/g-uva/egi-ice-net-example.git
+cd egi-ice-net-example
+chmod +x install-dependencies.sh
+install-dependencies.sh
+```
+
+
+##### 2.2 Other notebooks (WIP)
 - [Workflow 1](https://github.com/shashikantilager/data-center-characterization) *(Just for reference, please read the instructions to put the data into the `/data/...` folder).*
     1. [Notebook from Shashikant](https://drive.google.com/file/d/1FUi9xw3Y0VuzUhbqicEM2HnDONcNtgwB/view?usp=drive_link)
     2. [Dataset 01](https://drive.google.com/file/d/1cW7jggF2-TmPBrQEpJDtx0vOYs5Me8Cg/view?usp=drive_link)
