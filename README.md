@@ -9,6 +9,7 @@ If you have access to access to the [deployment server](https://mc-a4.lab.uvalig
 
 #### 1. Install and run Scaphandre and Prometheus.
 To install Scaphandre and Prometheus, you just need to copy and run this command on your notebook terminal.
+**Please note that this process takes a while, as we're installing both Scaphandre and Prometheus services.**
 ```sh
 curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
 chmod +x install-scaphandre-prometheus.sh
