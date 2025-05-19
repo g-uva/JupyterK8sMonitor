@@ -47,6 +47,10 @@ singleuser:
   image:
     name: jupyter/datascience-notebook
     tag: latest
+  
+  extraEnv:
+    GRANT_SUDO: "yes"
+    NOTEBOOK_ARGS: "--allow-root"
 
   uid: 0
   fsGid: 0
@@ -57,16 +61,14 @@ singleuser:
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
-
-  allowPrivilegeEscalation: true
   
-  extraPodConfig:
-    automountServiceAccountToken: true
+  # extraPodConfig:
+  #   automountServiceAccountToken: true
 
   storage:
     type: dynamic
-    capacity: 5Gi
     homeMountPath: /home/jovyan
+    # capacity: 5Gi
     # dynamic:
     #   storageClass: standard
     #   pvcNameTemplate: claim-{username}
