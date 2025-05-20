@@ -32,9 +32,11 @@ def main():
     if not unique_id:
         print("No SESSION_ID found. Please execute generate_session_id.py script.")
     else:
+        start_dir = "/home/jovyan/experiments-export/"
+        os.makedirs(start_dir, exist_ok=True)
         root_key = list(skeleton_structure.keys())[0]
         base_dir = root_key.replace("<id>", unique_id)
-        create_folders(".", {base_dir: skeleton_structure[root_key]})
+        create_folders(start_dir, {base_dir: skeleton_structure[root_key]})
         print(f"Folder structure created under: {base_dir}")
 
 if __name__ == "__main__":

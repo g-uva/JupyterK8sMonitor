@@ -66,6 +66,24 @@ sudo -E python3 /home/jovyan/scripts/package_metrics.py
 
 ---
 > WIP @goncalo
+```sh
+ri_site_container_<id>-experiment/  
+├── ro-crate-metadata.json # (FAIR metadata + sustainability extensions)  
+├── data/
+│  ├── output/
+│      ├── <id>_metrics.csv
+│      └── workflow_output_files/  
+│  ├── input/
+│      └── workflow_input_files/
+│  └── logs/
+│      └── energy_log.json  
+├── executed/  
+│  └── jupyter-notebook.ipynb
+├── environment/
+│  ├── requirements.txt/environment.yml
+│  └── k8s.yml/ansible_config/cloud_formation_config  
+└── README.md
+```
 
 #### Infrastructure configuration
 > The reference for the steps come from the official Zero to Jupyter documentation.
