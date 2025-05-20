@@ -28,7 +28,7 @@ Run the following command:
 git clone https://github.com/g-uva/egi-ice-net-example.git
 cd egi-ice-net-example
 chmod +x install-dependencies.sh
-install-dependencies.sh
+./install-dependencies.sh
 ```
 
 ##### 2.2 Other notebooks (WIP)
