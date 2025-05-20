@@ -32,7 +32,8 @@ def main():
     root_key = list(skeleton_structure.keys())[0]
     base_dir = root_key.replace("<id>", unique_id)
     create_folders(".", {base_dir: skeleton_structure[root_key]})
-    print(f"Folder structure created under: {base_dir}")
+#     print(f"Folder structure created under: {base_dir}")
+    print(unique_id)
 
 if __name__ == "__main__":
     main()
