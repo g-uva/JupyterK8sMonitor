@@ -1,5 +1,4 @@
 import os
-import json
 import uuid
 
 base_directory = "/home/jovyan/" # This only workks in the JupyterLab environment.
