@@ -40,8 +40,6 @@ hub:
         - adnan
         - quint
         - goncalo
-    DummyAuthenticator:
-      password: greendigit2025
     JupyterHub:
       authenticator_class: dummy
 
