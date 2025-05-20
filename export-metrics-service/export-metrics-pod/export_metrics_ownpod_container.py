@@ -96,6 +96,7 @@ if __name__ == "__main__":
     start = pod.status.start_time
     end = datetime.now(timezone.utc)
 
+    base_dir_id = os.getenv("SESSION_ID")
     output_dir = "/home/jovyan/export-metrics"
     os.makedirs(output_dir, exist_ok=True)
 
