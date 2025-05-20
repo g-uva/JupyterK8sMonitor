@@ -113,6 +113,9 @@ kubectl -n jhub patch svc proxy-public \
   --type='merge' \
   -p '{"spec":{"externalIPs":["192.168.49.2"]}}'
 
+# Setting the password secret: `hub-password-secret` is recognised by JupyterHub automatically.
+kubectl create secret generic hub-password-secret -n jhub --from-literal=password='<password_ofyourown>'
+
 ```
 
 4. Apply PodMonitor and Nginx configurations.
