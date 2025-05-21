@@ -19,6 +19,7 @@ To install Scaphandre and Prometheus, you just need to copy and run this command
 curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
 chmod +x install-scaphandre-prometheus.sh
 ./install-scaphandre-prometheus.sh
+sudo rm -rf ./install-scaphandre-prometheus.sh
 ```
 
 #### 2. Run your workflow (notebook examples)
@@ -66,6 +67,24 @@ sudo -E python3 /home/jovyan/scripts/package_metrics.py
 
 ---
 > WIP @goncalo
+```sh
+ri_site_container_<id>-experiment/  
+├── ro-crate-metadata.json # (FAIR metadata + sustainability extensions)  
+├── data/
+│  ├── output/
+│      ├── <id>_metrics.csv
+│      └── workflow_output_files/  
+│  ├── input/
+│      └── workflow_input_files/
+│  └── logs/
+│      └── energy_log.json  
+├── executed/  
+│  └── jupyter-notebook.ipynb
+├── environment/
+│  ├── requirements.txt/environment.yml
+│  └── k8s.yml/ansible_config/cloud_formation_config  
+└── README.md
+```
 
 #### Infrastructure configuration
 > The reference for the steps come from the official Zero to Jupyter documentation.
