@@ -1,4 +1,4 @@
-# 🌱🌍♻️ JupyterHub Scaphandre Monitor (GreenDIGIT project)
+# 🌱🌍♻️ JupyterK8sMonitor (GreenDIGIT project)
 This is the repository that contains the configuration files for the Helm Zero to Jupyter Kubernetes cluster with Scaphandre. This is an easy way to configure and deploy your application in Kubernetes using Scaphandre and JupyterHub.
 
 
