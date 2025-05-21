@@ -4,5 +4,5 @@ curl -fsSL https://apt.grafana.com/gpg.key | sudo gpg --dearmor -o /etc/apt/keyr
 
 echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
 
-sudo apt-get update
+sudo apt-get update -y
 sudo apt-get install -y grafana

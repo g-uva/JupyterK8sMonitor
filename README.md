@@ -19,6 +19,7 @@ To install Scaphandre and Prometheus, you just need to copy and run this command
 curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/refs/heads/master/scaphandre-prometheus-ownpod/install-scaphandre-prometheus.sh
 chmod +x install-scaphandre-prometheus.sh
 ./install-scaphandre-prometheus.sh
+sudo rm -rf ./install-scaphandre-prometheus.sh
 ```
 
 #### 2. Run your workflow (notebook examples)
