@@ -1,0 +1,16 @@
+{
+    "ri_site_container_<id>-experiment": {
+        "data": {
+            "output": {
+                "workflow_output_files": {}
+            },
+            "input": {
+                "workflow_input_files": {}
+            },
+            "logs": {}
+        },
+        "executed": {},
+        "environment": {},
+        "": {}
+    }
+}

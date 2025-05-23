@@ -1,23 +1,11 @@
 import os
 import uuid
+import json
 
 base_directory = "/home/jovyan/" # This only workks in the JupyterLab environment.
-skeleton_structure = {
-    "ri_site_container_<id>-experiment": {
-        "data": {
-            "output": {
-                "workflow_output_files": {}
-            },
-            "input": {
-                "workflow_input_files": {}
-            },
-            "logs": {}
-        },
-        "executed": {},
-        "environment": {},
-        "": {}
-    }
-}
+skeleton_structure = ""
+with open("./skeleton.json", "r") as f:
+    skeleton_structure = json.load(f)
 
 def create_folders(base_path, structure):
      for name, subdirs in structure.items():
