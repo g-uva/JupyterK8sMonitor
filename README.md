@@ -32,6 +32,11 @@ echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stab
 
 sudo apt-get update -y
 sudo apt-get install -y grafana
+
+# Start Grafana:
+# Allows Grafana embedding (e.g., in <iframe>).
+sudo sed -i 's/^[;#]*\s*allow_embedding\s*=\s*false/allow_embedding = true/' /etc/grafana/grafana.ini
+sudo grafana-server --homepath=/usr/share/grafana --config=/etc/grafana/grafana.ini &
 ```
 
 #### 2. Run your workflow (notebook examples)
