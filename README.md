@@ -12,7 +12,7 @@ If you have access to access to the [deployment server](https://mc-a4.lab.uvalig
 2. *Run your workflow.*
 3. Export CSV metrics (and download them).
 
-#### 1. Install and run Scaphandre and Prometheus.
+#### 1. Install and run Scaphandre, Prometheus, and Grafana.
 To install Scaphandre and Prometheus, you just need to copy and run this command on your notebook terminal.
 **Please note that this process takes a while, as we're installing both Scaphandre and Prometheus services.**
 ```sh
@@ -20,6 +20,18 @@ curl -O https://raw.githubusercontent.com/g-uva/jupyterhub-scaphandre-monitor/re
 chmod +x install-scaphandre-prometheus.sh
 ./install-scaphandre-prometheus.sh
 sudo rm -rf ./install-scaphandre-prometheus.sh
+```
+
+Additionally, install and serve Grafana at `:3000` with the following script:
+```sh
+sudo apt-get install -y software-properties-common software-properties-common gnupg2
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://apt.grafana.com/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/grafana.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
+
+sudo apt-get update -y
+sudo apt-get install -y grafana
 ```
 
 #### 2. Run your workflow (notebook examples)
