@@ -40,6 +40,7 @@ scrape_configs:
   - job_name: 'scaphandre-local'
     static_configs:
       - targets: ['localhost:8081']
+--web.cors.origin=*
 EOF
 )
 
