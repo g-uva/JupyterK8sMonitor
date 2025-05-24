@@ -44,7 +44,7 @@ EOF
 )
 
 echo "$PROMETHEUS_CONFIG" > prometheus.yml
-nohup /home/jovyan/.bin/prometheus-unzipped/prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 > prometheus.log 2>&1 &
+nohup /home/jovyan/.bin/prometheus-unzipped/prometheus --config.file=/home/jovyan/.bin/prometheus.yml --web.listen-address=0.0.0.0:9090 > prometheus.log 2>&1 &
 
 
 # Install Grafana
