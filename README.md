@@ -119,16 +119,21 @@ sudo chown -R $(whoami):$(whoami) ~ # Extending the automatic reading/writing ac
 
 1. Install Helm.
 2. Install Kubernetes and `kubectl`.
+```sh
+# We're using minikube as the Kubernetes managed environment.
+# The port range must be allowed from the API Server control, in order to expose thee individual ports from users.
+minikube start --extra-config=apiserver.service-node-port-range=9091-9100,30000-32767
+```
 3. Install all the repositories from Helm using the `yaml` files. There are two main flavours that we can choose from:
-    1. `jupyterhub-scaphandre-monitor/jhub-config.yaml`: configuration for Spawner with Scaphandre sidecar.
-    2. `jupyterhub-scaphandre-monitor/jhub-config-local.yaml`: configuration for Scaphandre to be installed locally.
+    1. `/home/goncalo/jupyterhub-scaphandre-monitor/jhub-config.yaml`: configuration for Spawner with Scaphandre sidecar.
+    2. `/home/goncalo/jupyterhub-scaphandre-monitor/jhub-config-local.yaml`: configuration for Scaphandre to be installed locally.
 ```sh
 # -------------
 # JupyterHub chart installation.
 # -------------
 helm install jhub jupyterhub/jupyterhub \
 -n jhub --create-namespace \
---values ./jhub-config.yaml # Point to the configuration file for JupyterHub.
+--values ./jhub-config-local.yaml # Point to the configuration file for JupyterHub.
 
 # -------------
 # Monitoring (Prometheus + Grafana) chart installation.

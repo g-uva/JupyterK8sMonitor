@@ -1,6 +1,16 @@
 proxy:
   https:
     enabled: false
+  # secretToken: "not-a-secret-token"
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/rewrite-target: /jupyter/user/$2/
+  #   hosts:
+  #     - host: jupyter.yourdomain.com
+  #       paths:
+  #         - path: /prometheus-(.*)
+  #           pathType: ImplementationSpecific
 
 hub:
   config:
