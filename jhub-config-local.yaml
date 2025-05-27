@@ -56,6 +56,8 @@ singleuser:
     GRANT_SUDO: "yes"
     NOTEBOOK_ARGS: "--allow-root"
 
+  # assign a dynamic port
+
   uid: 0
   fsGid: 0
   cmd:
@@ -65,6 +67,7 @@ singleuser:
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
+      export PROJECT_ID=($kubernetes-service)
   
   extraPodConfig:
     automountServiceAccountToken: true

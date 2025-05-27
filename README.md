@@ -12,6 +12,8 @@ If you have access to access to the [deployment server](https://mc-a4.lab.uvalig
 2. *Run your workflow.*
 3. Export CSV metrics (and download them).
 
+> This configuration is to be used with [EcoJupyter](https://github.com/g-uva/EcoJupyter).
+
 #### 1. Install and run Scaphandre, Prometheus, and Grafana.
 To install Scaphandre and Prometheus, you just need to copy and run this command on your notebook terminal.
 **Please note that this process takes a while, as we're installing both Scaphandre and Prometheus services.**
@@ -22,7 +24,7 @@ chmod +x install-scaphandre-prometheus.sh
 sudo rm -rf ./install-scaphandre-prometheus.sh
 ```
 
-Additionally, install and serve Grafana at `:3000` with the following script:
+<!-- Additionally, install and serve Grafana at `:3000` with the following script:
 ```sh
 sudo apt-get install -y software-properties-common software-properties-common gnupg2
 sudo mkdir -p /etc/apt/keyrings
@@ -37,7 +39,7 @@ sudo apt-get install -y grafana
 # Allows Grafana embedding (e.g., in <iframe>).
 sudo sed -i 's/^[;#]*\s*allow_embedding\s*=\s*false/allow_embedding = true/' /etc/grafana/grafana.ini
 sudo grafana-server --homepath=/usr/share/grafana --config=/etc/grafana/grafana.ini &
-```
+``` -->
 
 #### 2. Run your workflow (notebook examples)
 ##### 2.1 IceNet notebook example
@@ -88,8 +90,8 @@ sudo -E python3 /home/jovyan/scripts/package_metrics.py
 ri_site_container_<id>-experiment/  
 ├── ro-crate-metadata.json # (FAIR metadata + sustainability extensions)  
 ├── data/
-│  ├── output/
 │      ├── <id>_metrics.csv
+│  ├── output/
 │      └── workflow_output_files/  
 │  ├── input/
 │      └── workflow_input_files/
