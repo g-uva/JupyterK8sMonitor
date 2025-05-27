@@ -45,8 +45,6 @@ hub:
           return pod
       c.KubeSpawner.modify_pod_hook = modify_pod
 
-
-
 singleuser:
   image:
     name: jupyter/datascience-notebook
@@ -55,8 +53,6 @@ singleuser:
   extraEnv:
     GRANT_SUDO: "yes"
     NOTEBOOK_ARGS: "--allow-root"
-
-  # assign a dynamic port
 
   uid: 0
   fsGid: 0
@@ -87,8 +83,28 @@ singleuser:
         hostPath:
           path: /sys
           type: Directory
+      - name: starter-notebook
+        configMap:
+          name: starter-notebook
 
     extraVolumeMounts:
       - name: sys
         mountPath: /sys
         readOnly: true
+      - name: starter-notebook
+        mountPath: /srv/starter-notebooks
+        readOnly: true
+
+  initContainers:
+    - name: copy-starter-notebook
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
+      volumeMounts:
+        - name: starter-notebook
+          mountPath: /srv/starter-notebooks
+        - name: volume
+          mountPath: /home/jovyan

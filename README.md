@@ -154,6 +154,11 @@ kubectl -n jhub patch svc proxy-public \
 # Setting the password secret: `hub-password-secret` is recognised by JupyterHub automatically.
 kubectl create secret generic hub-password-secret -n jhub --from-literal=password='<password_ofyourown>'
 
+# For PVC prepopulated files.
+kubectl create configmap starter-notebook \
+  --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb
+
+
 ```
 
 4. Apply PodMonitor and Nginx configurations.
