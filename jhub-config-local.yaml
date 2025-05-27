@@ -60,6 +60,10 @@ singleuser:
     - bash
     - -c
     - |
+      # --- COPY NOTEBOOK TO HOME ON SPAWN (if not present) ---
+      if [ ! -f /home/jovyan/GD_EcoJupyter_Tutorial.ipynb ]; then
+        cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
+      fi
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
@@ -94,17 +98,3 @@ singleuser:
       - name: starter-notebook
         mountPath: /srv/starter-notebooks
         readOnly: true
-
-  initContainers:
-    - name: copy-starter-notebook
-      image: busybox
-      command:
-        - sh
-        - -c
-        - |
-          cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
-      volumeMounts:
-        - name: starter-notebook
-          mountPath: /srv/starter-notebooks
-        - name: volume
-          mountPath: /home/jovyan

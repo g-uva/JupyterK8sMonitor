@@ -156,7 +156,8 @@ kubectl create secret generic hub-password-secret -n jhub --from-literal=passwor
 
 # For PVC prepopulated files.
 kubectl create configmap starter-notebook \
-  --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb
+  --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb \
+  -n jhub
 
 
 ```
