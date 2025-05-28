@@ -86,6 +86,7 @@ sudo -E python3 /home/jovyan/scripts/package_metrics.py
 
 ---
 > WIP @goncalo
+> This section is for the infrastructure manager only. Please disregard if you're an end user of the Notebook / Plugin.
 ```sh
 ri_site_container_<id>-experiment/  
 ├── ro-crate-metadata.json # (FAIR metadata + sustainability extensions)  
@@ -163,6 +164,9 @@ kubectl create secret generic hub-password-secret -n jhub --from-literal=passwor
 kubectl create configmap starter-notebook \
   --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb \
   -n jhub
+
+# To restart the deployment rollout (in case some changes need to be propagated)
+kubectl rollout restart deployment hub -n jhub
 
 
 ```
