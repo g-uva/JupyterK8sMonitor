@@ -70,14 +70,22 @@ singleuser:
     - bash
     - -c
     - |
-      # --- COPY NOTEBOOK TO HOME ON SPAWN (if not present) ---
+
       if [ ! -f /home/jovyan/GD_EcoJupyter_Tutorial.ipynb ]; then
         cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
       fi
+
+      if [ ! -f /home/jovyan/GD_EcoJupyter_StressTest.ipynb ]; then
+        cp /srv/starter-notebooks/GD_EcoJupyter_StressTest.ipynb /home/jovyan/GD_EcoJupyter_StressTest.ipynb
+      fi
+
+      git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
+
       if [ ! -d /home/jovyan/shashikant-notebook/ ]; then
         mkdir -p /home/jovyan/
         cp -r /srv/shashikant-notebook/ /home/jovyan/shashikant-notebook
       fi
+
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
       chmod 0440 /etc/sudoers.d/jovyan && \
       exec start.sh jupyterhub-singleuser
@@ -104,9 +112,12 @@ singleuser:
       - name: starter-notebook
         configMap:
           name: starter-notebook
-      - name: shashikant-notebook-pvc
-        persistentVolumeClaim:
-          claimName: shashikant-notebook-pvc
+      - name: stress-notebook
+        configMap:
+          name: stress-notebook
+      # - name: shashikant-notebook-pvc
+      #   persistentVolumeClaim:
+      #     claimName: shashikant-notebook-pvc
       # - name: shashikant-notebook-example
       #   configMap:
       #     name: shashikant-notebook
@@ -118,6 +129,9 @@ singleuser:
       - name: starter-notebook
         mountPath: /srv/starter-notebooks
         readOnly: true
-      - name: shashikant-notebook-pvc
-        mountPath: /srv/shashikant-notebook
+      - name: stress-notebook
+        mountPath: /srv/stress-notebook
         readOnly: true
+      # - name: shashikant-notebook-pvc
+      #   mountPath: /srv/shashikant-notebook
+      #   readOnly: true
