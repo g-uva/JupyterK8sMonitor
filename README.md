@@ -165,10 +165,12 @@ kubectl create configmap starter-notebook \
   --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb \
   -n jhub
 
+kubectl create configmap shashikant-notebook-example \
+  --from-folder=shashikant-notebook-example=/home/goncalo/jhub-helm-config/shashikant-notebook/ \
+  -n jhub
+
 # To restart the deployment rollout (in case some changes need to be propagated)
 kubectl rollout restart deployment hub -n jhub
-
-
 ```
 
 4. Apply PodMonitor and Nginx configurations.
