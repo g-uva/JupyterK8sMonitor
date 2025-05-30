@@ -70,13 +70,12 @@ singleuser:
     - bash
     - -c
     - |
-
       if [ ! -f /home/jovyan/GD_EcoJupyter_Tutorial.ipynb ]; then
         cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
       fi
 
       if [ ! -f /home/jovyan/GD_EcoJupyter_StressTest.ipynb ]; then
-        cp /srv/starter-notebooks/GD_EcoJupyter_StressTest.ipynb /home/jovyan/GD_EcoJupyter_StressTest.ipynb
+        cp /srv/stress-notebook/GD_EcoJupyter_StressTest.ipynb /home/jovyan/GD_EcoJupyter_StressTest.ipynb
       fi
 
       git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
