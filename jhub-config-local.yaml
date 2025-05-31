@@ -78,6 +78,14 @@ singleuser:
         cp /srv/stress-notebook/GD_EcoJupyter_StressTest.ipynb /home/jovyan/GD_EcoJupyter_StressTest.ipynb
       fi
 
+      if [ ! -d /usr/local/etc/jupyter ]; then
+        mkdir -p /usr/local/etc/jupyter
+      fi
+
+      if [ ! -f /usr/local/etc/jupyter/notebook_tracker_experimentid.py ]; then
+        cp /srv/track-notebook/notebook_tracker_experimentid.py /usr/local/etc/jupyter/notebook_tracker_experimentid.py
+      fi
+
       git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
 
       if [ ! -d /home/jovyan/shashikant-notebook/ ]; then
@@ -114,6 +122,9 @@ singleuser:
       - name: stress-notebook
         configMap:
           name: stress-notebook
+      - name: track-notebook
+        configMap:
+          name: track-notebook
       # - name: shashikant-notebook-pvc
       #   persistentVolumeClaim:
       #     claimName: shashikant-notebook-pvc
@@ -130,6 +141,9 @@ singleuser:
         readOnly: true
       - name: stress-notebook
         mountPath: /srv/stress-notebook
+        readOnly: true
+      - name: track-notebook
+        mountPath: /srv/track-notebook
         readOnly: true
       # - name: shashikant-notebook-pvc
       #   mountPath: /srv/shashikant-notebook
