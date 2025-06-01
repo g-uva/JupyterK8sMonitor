@@ -86,12 +86,10 @@ singleuser:
         cp /srv/track-notebook/notebook_tracker_experimentid.py /usr/local/etc/jupyter/notebook_tracker_experimentid.py
       fi
 
-      if ! grep -q "import notebook_tracker_experimentid" /usr/local/etc/jupyter/jupyter_notebook_config.py 2>/dev/null; then
-        echo "import sys" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
-        echo "sys.path.append('/srv/track-notebook')" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
-        echo "import notebook_tracker_experimentid" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
-        echo "c = get_config()" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
-        echo "c.Session.kernel_manager_class = 'notebook_tracker_experimentid.ExperimentTrackingKernelManager'" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
+      if ! grep -q "import notebook_tracker_experimentid" /usr/local/etc/jupyter/jupyter_server_config.py 2>/dev/null; then
+        echo "import sys" >> /usr/local/etc/jupyter/jupyter_server_config.py
+        echo "sys.path.append('/srv/track-notebook')" >> /usr/local/etc/jupyter/jupyter_server_config.py
+        echo "import notebook_tracker_experimentid" >> /usr/local/etc/jupyter/jupyter_server_config.py
       fi
 
 

@@ -1,62 +1,53 @@
-from jupyter_server.serverapp import ServerApp as NotebookApp
-from jupyter_server.services.kernels.kernelmanager import MappingKernelManager
-import datetime, hashlib, os, json
+import datetime
+import hashlib
+import os
+import json
+from IPython import get_ipython
 
-class ExperimentTrackingKernelManager(MappingKernelManager):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.tracking = {}  # Per-kernel tracking
-
-    def _get_kernel_id(self, session):
-        for kid, k in self._kernels.items():
-            if k.session.session == session:
-                return kid
-        return None
-
-    async def execute_request(self, stream, ident, parent):
-        kernel_id = self._get_kernel_id(stream.session)
-        if kernel_id not in self.tracking:
-            self.tracking[kernel_id] = {
-                "experiment_id": self._new_experiment_id(),
-                "start_time": datetime.datetime.utcnow(),
-                "pending": 0,
-                "executed": 0
-            }
-            print(f"[Experiment Tracking] Started experiment {self.tracking[kernel_id]['experiment_id']}")
-
-        self.tracking[kernel_id]["pending"] += 1
-
-        reply = await super().execute_request(stream, ident, parent)
-        self.tracking[kernel_id]["executed"] += 1
-        self.tracking[kernel_id]["pending"] -= 1
-
-        # Check if all cells done
-        if self.tracking[kernel_id]["pending"] == 0:
-            self._end_experiment(kernel_id)
-
-        return reply
+class ExperimentTracker:
+    def __init__(self):
+        self.experiment_id = self._new_experiment_id()
+        self.start_time = datetime.datetime.utcnow()
+        self.executed_cells = 0
+        self.log_dir = f"/home/jovyan/experiment_logs/{self.experiment_id}"
+        os.makedirs(self.log_dir, exist_ok=True)
+        print(f"[Experiment Tracking] Started experiment {self.experiment_id}")
 
     def _new_experiment_id(self):
         ts = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
         return f"exp-{hashlib.sha256(ts.encode()).hexdigest()[:8]}-{ts}"
 
-    def _end_experiment(self, kernel_id):
-        info = self.tracking[kernel_id]
+    def log_start(self):
+        print(f"[Experiment Tracking] Cell execution started.")
+
+    def log_end(self):
+        self.executed_cells += 1
+        print(f"[Experiment Tracking] Cell execution completed. Total so far: {self.executed_cells}")
+        # Optional: Save incremental progress
+        with open(f"{self.log_dir}/progress.json", "w") as f:
+            json.dump({"cells_executed": self.executed_cells}, f, indent=2)
+
+    def finalize(self):
         end_time = datetime.datetime.utcnow()
-        log_dir = f"/home/jovyan/experiment_logs/{info['experiment_id']}"
-        os.makedirs(log_dir, exist_ok=True)
-        with open(f"{log_dir}/metadata.json", "w") as f:
-            json.dump({
-                "experiment_id": info["experiment_id"],
-                "start_time": str(info["start_time"]),
-                "end_time": str(end_time),
-                "duration": (end_time - info["start_time"]).total_seconds(),
-                "cells_executed": info["executed"]
-            }, f, indent=2)
-        print(f"[Experiment Tracking] Experiment {info['experiment_id']} completed and logged.")
-        del self.tracking[kernel_id]
-    
-    print("[Experiment Tracking] Tracker module loaded successfully.")
-    
-print("[Experiment Tracking] Applying custom KernelManager.")
-NotebookApp.kernel_manager_class = ExperimentTrackingKernelManager
+        metadata = {
+            "experiment_id": self.experiment_id,
+            "start_time": str(self.start_time),
+            "end_time": str(end_time),
+            "duration": (end_time - self.start_time).total_seconds(),
+            "cells_executed": self.executed_cells
+        }
+        with open(f"{self.log_dir}/metadata.json", "w") as f:
+            json.dump(metadata, f, indent=2)
+        print(f"[Experiment Tracking] Experiment {self.experiment_id} completed and logged.")
+
+# Register hooks with IPython
+ip = get_ipython()
+if ip:
+    tracker = ExperimentTracker()
+    ip.events.register('pre_execute', tracker.log_start)
+    ip.events.register('post_execute', tracker.log_end)
+    import atexit
+    atexit.register(tracker.finalize)
+    print("[Experiment Tracking] IPython hooks registered.")
+else:
+    print("[Experiment Tracking] Not running inside an IPython environment.")
