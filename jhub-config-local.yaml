@@ -86,6 +86,17 @@ singleuser:
         cp /srv/track-notebook/notebook_tracker_experimentid.py /usr/local/etc/jupyter/notebook_tracker_experimentid.py
       fi
 
+      # Append import to jupyter_notebook_config.py (if not already added)
+      if ! grep -q "import notebook_tracker_experimentid" /usr/local/etc/jupyter/jupyter_notebook_config.py 2>/dev/null; then
+        echo "import sys" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
+        echo "sys.path.append('/usr/local/etc/jupyter')" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
+        echo "import notebook_tracker_experimentid" >> /usr/local/etc/jupyter/jupyter_notebook_config.py
+      fi
+
+      # Create experiment logs directory
+      mkdir -p /home/jovyan/experiment_logs
+      chmod 777 /home/jovyan/experiment_logs
+
       git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
 
       if [ ! -d /home/jovyan/shashikant-notebook/ ]; then
