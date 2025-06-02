@@ -104,6 +104,7 @@ singleuser:
       git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
       chmod -R 777 /home/jovyan/icenet-notebook
       chmod +x /home/jovyan/icenet-notebook/install-dependencies.sh
+      git config --global --add safe.directory /home/jovyan/icenet-notebook
 
       if [ ! -d /home/jovyan/shashikant-notebook/ ]; then
         mkdir -p /home/jovyan/
