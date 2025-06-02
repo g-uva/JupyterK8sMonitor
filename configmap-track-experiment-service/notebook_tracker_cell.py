@@ -1,3 +1,9 @@
+# This should be added at the beginning of each notebook workflow (first cell).
+# This code is designed to track the execution of Jupyter notebook cells, log their execution status, 
+# and export metrics from a Prometheus server.
+# At the end of the notebook, last cell, we must run `tracker.end_experiment()` to finalize the tracking.
+
+#!pip install prometheus_api_client
 import os
 import json
 import hashlib
@@ -11,7 +17,7 @@ from prometheus_api_client import PrometheusConnect
 class ExperimentTracker:
     def __init__(self):
         self.experiment_id = self._new_experiment_id()
-        self.start_time = datetime.utcnow()
+        self.start_time = datetime.now(timezone.utc)  # Timezone-aware
         self.executed_cells = 0
         self.failed_cells = 0
         self.logs = []
@@ -41,7 +47,7 @@ class ExperimentTracker:
                     print(f"[Experiment Tracking] No data for {metric}")
                     continue
                 for ts, val in data[0]["values"]:
-                    dt = datetime.fromtimestamp(float(ts), tz=timezone.utc)
+                    dt = datetime.fromtimestamp(float(ts), tz=timezone.utc)  # Timezone-aware
                     if dt not in all_data:
                         all_data[dt] = {}
                     all_data[dt][metric] = float(val)
@@ -63,12 +69,12 @@ class ExperimentTracker:
         return f"exp-{hashlib.sha256(ts.encode()).hexdigest()[:8]}-{ts}"
 
     def pre_run_cell(self, info):
-        self.cell_start_time = datetime.utcnow()
+        self.cell_start_time = datetime.now(timezone.utc)  # Timezone-aware
         self.current_cell_code = info.raw_cell.strip()
         self.logs.append(f"[{self.cell_start_time}] Starting cell execution.")
 
     def post_run_cell(self, result: ExecutionResult):
-        cell_end_time = datetime.utcnow()
+        cell_end_time = datetime.now(timezone.utc)  # Timezone-aware
         if not hasattr(self, "cell_start_time"):
             self.cell_start_time = self.start_time
             self.current_cell_code = "<unknown cell>"
@@ -87,7 +93,7 @@ class ExperimentTracker:
             print(success_msg)
 
     def end_experiment(self):
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)  # Timezone-aware
         duration = (end_time - self.start_time).total_seconds()
         summary = {
             "experiment_id": self.experiment_id,

@@ -92,12 +92,16 @@ singleuser:
         echo "import notebook_tracker_experimentid" >> /usr/local/etc/jupyter/jupyter_server_config.py
       fi
 
+      # For the notebook tracker
+      pip install prometheus_api_client
 
       # Create experiment logs directory
       mkdir -p /home/jovyan/experiment_logs
       chmod 777 /home/jovyan/experiment_logs
 
       git clone https://github.com/g-uva/egi-ice-net-example.git /home/jovyan/icenet-notebook
+      chmod -R 777 /home/jovyan/icenet-notebook
+      chmod +x /home/jovyan/icenet-notebook/install-dependencies.sh
 
       if [ ! -d /home/jovyan/shashikant-notebook/ ]; then
         mkdir -p /home/jovyan/
