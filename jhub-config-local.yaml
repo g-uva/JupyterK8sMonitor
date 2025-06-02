@@ -73,10 +73,12 @@ singleuser:
       if [ ! -f /home/jovyan/GD_EcoJupyter_Tutorial.ipynb ]; then
         cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
       fi
+      chmod 777 /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
 
       if [ ! -f /home/jovyan/GD_EcoJupyter_StressTest.ipynb ]; then
         cp /srv/stress-notebook/GD_EcoJupyter_StressTest.ipynb /home/jovyan/GD_EcoJupyter_StressTest.ipynb
       fi
+      chmod 777 /home/jovyan/GD_EcoJupyter_StressTest.ipynb
 
       if [ ! -d /usr/local/etc/jupyter ]; then
         mkdir -p /usr/local/etc/jupyter
