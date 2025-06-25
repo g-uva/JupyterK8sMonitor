@@ -1,14 +1,8 @@
-# This should be added at the beginning of each notebook workflow (first cell).
-# This code is designed to track the execution of Jupyter notebook cells, log their execution status, 
-# and export metrics from a Prometheus server.
-# At the end of the notebook, last cell, we must run `tracker.end_experiment()` to finalize the tracking.
-
-#!pip install prometheus_api_client
 import os
 import json
 import hashlib
 import pandas as pd
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 import requests
 from IPython import get_ipython
 from IPython.core.interactiveshell import ExecutionResult
@@ -65,7 +59,7 @@ class ExperimentTracker:
         print(f"[Experiment Tracking] Wrote {len(df)} rows to {csv_path}")
 
     def _new_experiment_id(self):
-        ts = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        ts = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
         return f"exp-{hashlib.sha256(ts.encode()).hexdigest()[:8]}-{ts}"
 
     def pre_run_cell(self, info):

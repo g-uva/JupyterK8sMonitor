@@ -18,6 +18,7 @@ hub:
       baseUrl: "/jupyter"
       tornado_settings:
         xheaders: true
+
     JupyterHubCuller:
       enabled: true
       timeout: 3600 # 1 hour
@@ -70,6 +71,8 @@ singleuser:
     - bash
     - -c
     - |
+      sudo apt update && sudo apt install -y jq
+
       if [ ! -f /home/jovyan/GD_EcoJupyter_Tutorial.ipynb ]; then
         cp /srv/starter-notebooks/GD_EcoJupyter_Tutorial.ipynb /home/jovyan/GD_EcoJupyter_Tutorial.ipynb
       fi
@@ -112,7 +115,8 @@ singleuser:
       fi
 
       echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan && \
-      chmod 0440 /etc/sudoers.d/jovyan && \
+      chmod 0440 /etc/sudoers.d/jovyan
+
       exec start.sh jupyterhub-singleuser
       export PROJECT_ID=($kubernetes-service)
   
