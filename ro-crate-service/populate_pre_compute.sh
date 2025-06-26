@@ -13,7 +13,6 @@ if [ ! -d "$TARGET_DIR" ]; then
   exit 1
 fi
 
-# sudo rm -rf "$TARGET_DIR"/ 2>/dev/null
 cp "$INPUT_DIR"/* "$TARGET_DIR"/ 2>/dev/null
 
 if [ $? -ne 0 ]; then
@@ -21,19 +20,6 @@ if [ $? -ne 0 ]; then
 else
   echo "All files from '$INPUT_DIR' moved to '$TARGET_DIR'"
 fi
-
-# echo "=== OS Detection ==="
-# uname_str="$(uname -s)"
-# case "${uname_str}" in
-#     Linux*)     os=Linux;;
-#     Darwin*)    os=Mac;;
-#     CYGWIN*|MINGW*|MSYS*)    os=Windows;;
-#     *)          os="UNKNOWN:${uname_str}"
-# esac
-# echo "Detected OS: $os"
-# echo "$os" > os_info.txt
-
-# config_files=()
 
 echo "=== OS Detection ==="
 uname_str="$(uname -s)"
@@ -116,7 +102,6 @@ echo "Moving os_info.txt and config files to $TARGET_DIR ..."
 mv os_info.txt "$TARGET_DIR"/
 
 for file in "${config_files[@]}"; do
-    # Copy instead of move if you prefer: use cp instead of mv
     cp "$file" "$TARGET_DIR"/
 done
 
