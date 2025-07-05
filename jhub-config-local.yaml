@@ -1,16 +1,6 @@
 proxy:
   https:
     enabled: false
-  # secretToken: "not-a-secret-token"
-  # ingress:
-  #   enabled: true
-  #   annotations:
-  #     nginx.ingress.kubernetes.io/rewrite-target: /jupyter/user/$2/
-  #   hosts:
-  #     - host: jupyter.yourdomain.com
-  #       paths:
-  #         - path: /prometheus-(.*)
-  #           pathType: ImplementationSpecific
 
 hub:
   config:
@@ -55,6 +45,9 @@ hub:
           }
           return pod
       c.KubeSpawner.modify_pod_hook = modify_pod
+    notebook-xorigin: |
+      c.NotebookApp.allow_origin = '*'
+      c.NotebookApp.disable_check_xsrf = True
 
 singleuser:
   image:
@@ -64,6 +57,11 @@ singleuser:
   extraEnv:
     GRANT_SUDO: "yes"
     NOTEBOOK_ARGS: "--allow-root"
+    # JUPYTER_ALLOW_ORIGIN: "*"
+    # JUPYTER_ENABLE_LAB: "yes"
+    # JUPYTER_TOKEN: ""
+    # JUPYTERHUB_SINGLEUSER_APP: "notebook"
+    # JUPYTER_CONFIG_DIR: "/etc/jupyter"
 
   uid: 0
   fsGid: 0
