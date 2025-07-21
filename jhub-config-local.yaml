@@ -45,9 +45,9 @@ hub:
           }
           return pod
       c.KubeSpawner.modify_pod_hook = modify_pod
-    notebook-xorigin: |
-      c.NotebookApp.allow_origin = '*'
-      c.NotebookApp.disable_check_xsrf = True
+    # notebook-xorigin: |
+    #   c.NotebookApp.allow_origin = '*'
+    #   c.NotebookApp.disable_check_xsrf = True
 
 singleuser:
   image:

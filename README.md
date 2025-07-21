@@ -165,9 +165,17 @@ kubectl create configmap starter-notebook \
   --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_Tutorial.ipynb \
   -n jhub
 
-kubectl create configmap shashikant-notebook-example \
-  --from-folder=shashikant-notebook-example=/home/goncalo/jhub-helm-config/shashikant-notebook/ \
+kubectl create configmap stress-notebook \
+  --from-file=GD_EcoJupyter_Tutorial.ipynb=/home/goncalo/jhub-helm-config/tutorial-notebook/GD_EcoJupyter_StressTest.ipynb \
   -n jhub
+
+kubectl create configmap track-notebook \
+  --from-file=notebook_tracker_experimentid.py=/home/goncalo/jhub-helm-config/configmap-track-experiment-service/notebook_tracker_experimentid.py \
+  -n jhub
+
+# kubectl create configmap shashikant-notebook-example \
+#   --from-folder=shashikant-notebook-example=/home/goncalo/jhub-helm-config/shashikant-notebook/ \
+#   -n jhub
 
 # To restart the deployment rollout (in case some changes need to be propagated)
 kubectl rollout restart deployment hub -n jhub
